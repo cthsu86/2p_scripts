@@ -8,7 +8,7 @@
 % iterate over ALL cycles in addition to the regions saved in the
 % '*Intensities.mat' name. This happens sometimes when images are acquired
 % in a T series (rather than with a repeating script) and 
-% without the Piezo. It is less necessary to run this version if you are
+% not at max speed. It is less necessary to run this version if you are
 % doing an ex-vivo type of experiment that involves multiple trials, as
 % this particular script will plot the trials one after another rather than
 % superimposed. For plotting trials superimposed, refer to the original
@@ -22,11 +22,14 @@
 function [timeIntensityMat, lastBaselineIndex, voltOutTimes] = output2P_intensityVsTime_multipleCycles_v2(varargin)
 
 if (nargin==0),
-    rootdir = 'D:\23E10GCaMP7b_slowTimescale'; %210806\'; %210803'
-    signalMatname = 'TSeries-10132021-1144-671_Cycle00001_Ch2__userDrawnMask_Cycle00001_Intensities.mat'; %strrep(TProjMask, '.mat','Intensities.mat');
-    cycleRankNum = 0; %Set to 0 if there is no voltage output (such as from csChrimson stimulation laser) being used.
-    xmlName = 'TSeries-10132021-1144-671.xml';
-    cycleList = 1:73; %:18; %[1:1:475];
+    rootdir = 'F:\nsyb_GCaMP7b_23E10LexA_csChrimson'; %210806\'; %210803'
+%     TSeries-11282022-1451-1042_stackTimesFromXML
+    signalMatname = 'TSeries-11292022-1447-1045_Cycle00001_Ch2__userDrawnMask_Cycle00001_Intensities.mat'; %strrep(TProjMask, '.mat','Intensities.mat');
+    cycleRankNum = 1; %Set to 0 if there is no voltage output (such as from csChrimson stimulation laser) being used.
+    xmlName = 'TSeries-11292022-1447-1045.xml';
+%     cycleList = 1; % 2310 4619]; %4619%]; %%1:1609; %:18; %[1:1:475];
+%  cycleList = 2310; %4619%]; %%1:1609; %:18; %[1:1:475];
+cycleList = 4619
     cycleTextToReplace = 'Cycle00001_Intensities';
     originalSignalMatname = signalMatname;
 else,
@@ -89,7 +92,12 @@ for(ci = 1:numel(cycleList));
         display(ti);
         for(si = 1:size(bgRegions,1)),
             thisFrameBG = bgRegions{si,1};
+            try,
             bgIntensity = bgIntensity+sum(thisFrameBG)/numel(thisFrameBG);
+            catch,
+                bgIntensity = bgIntensity+thisFrameBG.Area;
+%                 display('?');
+            end;
         end;
         meanPixelIntensityPerFrame((ci-1)*size(regions,1)+ti,1) = bgIntensity;
     end;

@@ -48,6 +48,16 @@ elseif(~isempty(strfind(voltTextString,'300s baseline'))),
         numPulses = 30;
 %         pulseDur = 0.1;
     end;
+elseif(~isempty(strfind(voltTextString,'300s baseline'))),
+    %'30-5ms 1 Hz pulses 180s baseline'
+    seconds_baseline = 180;
+    pulseDur = 0.001
+    if(~isempty(strfind(voltTextString,'30-5ms'))),
+        interPulseInterval = 0.999;
+        numPulses = 30;
+%         pulseDur = 0.1;
+    end;
+    
 else,
     display(['Could not find a match for: ' voltTextString]);
 end;

@@ -1,11 +1,7 @@
 function [shutteredStartAndStopTimes, seconds_baseline] = shutterStartAndStopFromText(voltTextString) %,stackStartAndEnd);
 
-if(strcmp(voltTextString,'30s baseline')),
-    seconds_baseline =29.99;
-    numPulses = 60;
-else,
-    seconds_baseline = 299.96;
-end;
+seconds_baseline =29.99;
+numPulses = 60;
 % shutteredStartAndStopTimes = zeros(numPulses,2)+seconds_baseline;
 
 if(strcmp(voltTextString,'200ms 1 Hz 30s baseline')), %||strcmp(voltTextString,'200ms 1 Hz 120s baseline')),
@@ -42,11 +38,16 @@ elseif(strcmp(voltTextString,'30s 1 Hz 200 ms stimulus pulse')),
     pulseDur = 0.22;
     interPulseInterval = 0.780;
     numPulses = 30;
-elseif(seconds_baseline==299.96),
-%     pulseDur = 0.002;
-pulseDur = 1;
-    interPulseInterval = 4;
-    numPulses = 12;
+elseif(~isempty(strfind(voltTextString,'300s baseline'))),
+    seconds_baseline = 300;
+    if(~isempty(strfind(voltTextString,'2ms pulses'))),
+        pulseDur = 0.001;
+    end;
+    if(~isempty(strfind(voltTextString,'30-2ms'))),
+        interPulseInterval = 0.029;
+        numPulses = 30;
+%         pulseDur = 0.1;
+    end;
 else,
     display(['Could not find a match for: ' voltTextString]);
 end;
